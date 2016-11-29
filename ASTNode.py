@@ -27,12 +27,16 @@ class FloatConstant(ASTNode):
 
 class SingletonReference(ASTNode):
    def __init__(self, name):
+      if name not in symbol_table:
+         raise KeyError
       self.type = 'singleton reference'
       self.name = name
       self.info = symbol_table[name]
 
 class ArrayReference(ASTNode):
    def __init__(self, name, index):
+      if name not in symbol_table:
+         raise KeyError
       self.type = 'array reference' 
       self.name = name
       self.info = symbol_table[name]
@@ -147,7 +151,7 @@ def execute(statement):
 
    # while statement
    if statement['type'] == 'while':
-      while statement['condition']:
-         print(statement['condition'])
+      while evaluate(statement['condition']):
+         print(evaluate(statement['condition'].info['value']))
          for s in statement['whilePart']:
             execute(s)

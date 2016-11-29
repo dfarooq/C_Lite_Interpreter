@@ -98,7 +98,7 @@ def p_ifStatement(p):
 
 def p_whileStatement(p):
    '''whileStatement : WHILE LPAREN expression RPAREN statement'''
-   p[0] = [{'type' : 'while', 'condition' : evaluate(p[3]), 'whilePart' : p[5]}]
+   p[0] = [{'type' : 'while', 'condition' : p[3], 'whilePart' : p[5]}]
 
 def p_expression(p):
    '''expression : conjunctions'''
@@ -216,6 +216,10 @@ while True:
    try:
       parser.parse(s)
    except TypeError:
-      print("type mismatch")
+      print('type mismatch')
+      parser.errok()
+      parser.restart()
+   except KeyError:
+      print('name does not exist')
       parser.errok()
       parser.restart()
