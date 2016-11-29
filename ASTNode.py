@@ -38,6 +38,12 @@ class ArrayReference(ASTNode):
       self.info = symbol_table[name]
       self.index = index
 
+def makeType(val, typeOf):
+   if typeOf == 'float':
+      return float(val)
+   else: 
+      return int(val)
+
 def evaluate(root):
    if not root: 
       return 0
@@ -64,47 +70,47 @@ def evaluate(root):
 
       # type checking system
       if type(lhs) != type(rhs):
-         print("type mismatch")
-         return 0
+         raise TypeError
 
+      typeOf = type(lhs).__name__
       if root.op == '||':
-         return lhs or rhs
+         return makeType((lhs or rhs), typeOf)
 
       if root.op == 'and':
-         return lhs and rhs
+         return makeType((lhs and rhs), typeOf)
  
       if root.op == '==':
-         return lhs == rhs
+         return makeType((lhs == rhs), typeOf)
 
       if root.op == '!=':
-         return lhs != rhs
+         return makeType((lhs != rhs), typeOf)
 
       if root.op == '<':
-         return lhs < rhs
+         return makeType((lhs < rhs), typeOf)
 
       if root.op == '<=':
-         return lhs <= rhs
+         return makeType((lhs <= rhs), typeOf)
 
       if root.op == '>':
-         return lhs > rhs
+         return makeType((lhs > rhs), typeOf)
 
       if root.op == '>=':
-         return lhs >= rhs
+         return makeType((lhs >= rhs), typeOf)
 
       if root.op == '+': 
-         return lhs + rhs
+         return makeType((lhs + rhs), typeOf)
 
       if root.op == '-':
-         return lhs - rhs
+         return makeType((lhs - rhs), typeOf)
 
       if root.op == '*':
-         return lhs * rhs
+         return makeType((lhs * rhs), typeOf)
 
       if root.op == '/':
-         return lhs / rhs
+         return makeType((lhs / rhs), typeOf)
 
       if root.op == '%':
-         return lhs % rhs 
+         return makeType((lhs % rhs), typeOf)
 
 def declare(declaration):
    name = declaration.pop('name', None)
@@ -116,8 +122,7 @@ def execute(statement):
       rhs = statement['rhs']
 
       if lhs.info['type'] != type(rhs).__name__:
-         print("type mismatch")
-         return 0
+         raise TypeError
 
       if isinstance(lhs, SingletonReference):
          symbol_table[lhs.name]['value'] = rhs

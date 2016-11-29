@@ -55,7 +55,7 @@ def p_decpart(p):
    if len(p) == 2:
       p[0] = [{'name' : p[1], 'isArray' : False, 'length' : 0, 'value' : None}]
    else: 
-      p[-1] = [{'name' : p[1], 'isArray' : True, 'length' : p[3], 'value' : [None for i in range(p[3])]}]
+      p[0] = [{'name' : p[1], 'isArray' : True, 'length' : p[3], 'value' : [None for i in range(p[3])]}]
 
 def p_statements(p):
    '''statements : statements statement
@@ -192,7 +192,7 @@ def p_primary(p):
    elif len(p) == 4: # paren case
       p[0] = p[2]
    else: #the array case
-      p[0] = ArrayReference(p[1], execute(p[3]).value)
+      p[0] = ArrayReference(p[1], evaluate(p[3]))
 
 def p_literal(p):
    '''literal : INTEGER
@@ -213,4 +213,9 @@ while True:
    except EOFError:
       break
    if not s: continue
-   parser.parse(s)
+   try:
+      parser.parse(s)
+   except TypeError:
+      print("type mismatch")
+      parser.errok()
+      parser.restart()
