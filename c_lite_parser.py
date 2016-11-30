@@ -223,3 +223,7 @@ while True:
       print('name does not exist')
       parser.errok()
       parser.restart()
+   except IndexError:
+      print('index out of range')
+      parser.errok()
+      parser.restart()
